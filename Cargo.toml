@@ -1,19 +1,19 @@
 [package]
-name = "bevy_sprite3d"
-version = "5.0.0"
-edition = "2021"
+name = "bevy_sprite3d_instanced_tint"
+version = "0.1.0"
+edition = "2024"
 
-description = "Bevy Plugin to allow using 2d sprites in a 3d scene."
+description = "Bevy plugin for efficient 3D sprite with per-instance color tinting via InstancedTintMaterial"
 license = "MIT"
 readme = "readme.md"
-repository = "https://github.com/FraserLee/bevy_sprite3d"
-keywords = ["gamedev", "bevy", "sprite", "3d"]
+repository = "https://github.com/Mediocre-AI/bevy_sprite3d_instanced_tint"
+keywords = ["gamedev", "bevy", "sprite", "3d", "instance", "color", "tint"]
 
 [dependencies.bevy]
-version = "0.16.0"
+version = "0.16.1"
 default-features = false
 features = ["bevy_asset", "bevy_pbr", "bevy_sprite", "png", "std"]
 
 [dev-dependencies]
-bevy.version = "0.16.0" # (include default features when running examples)
+bevy.version = "0.16.1" # (include default features when running examples)
 rand = "0.8"
