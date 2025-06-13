@@ -1,4 +1,4 @@
-# bevy_sprite3d
+# bevy_sprite3d_instanced_tint
 [![Crates.io](https://img.shields.io/crates/v/bevy_sprite3d.svg)](https://crates.io/crates/bevy_sprite3d)
 [![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./license.md)
 
