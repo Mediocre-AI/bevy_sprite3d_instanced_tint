@@ -3,7 +3,7 @@ name = "bevy_sprite3d_instanced_tint"
 version = "0.1.0"
 edition = "2024"
 
-description = "Bevy plugin for efficient 3D sprite with per-instance color tinting via InstancedTintMaterial"
+description = "Bevy plugin for efficient 3D sprite with per-instance color tinting "
 license = "MIT"
 readme = "readme.md"
 repository = "https://github.com/Mediocre-AI/bevy_sprite3d_instanced_tint"
