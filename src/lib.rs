@@ -185,8 +185,10 @@ fn material(
     alpha_mode: AlphaMode,
     unlit: bool,
     emissive: LinearRgba,
+    base_color: Option<Color>,
 ) -> StandardMaterial {
     StandardMaterial {
+        base_color: base_color.unwrap_or(Color::WHITE),
         base_color_texture: Some(image),
         cull_mode: Some(Face::Back),
         alpha_mode,
@@ -238,6 +240,13 @@ pub struct Sprite3dBuilder {
     /// An emissive colour, if the sprite should emit light.
     /// `LinearRgba::Black` (default) does nothing.
     pub emissive: LinearRgba,
+
+    /// The sprite's base color.
+    /// `Color::WHITE` (default) does nothing.
+    pub base_color: Option<Color>,
+
+    /// unique
+    pub unique: bool,
 }
 
 impl Default for Sprite3dBuilder {
@@ -250,6 +259,8 @@ impl Default for Sprite3dBuilder {
             unlit: false,
             double_sided: true,
             emissive: LinearRgba::BLACK,
+            base_color: None,
+            unique: false,
         }
     }
 }
@@ -319,27 +330,38 @@ impl Sprite3dBuilder {
             // likewise for material, use the existing if the image is already cached.
             // (possibly look into a bool in Sprite3dBuilder to manually disable caching for an individual sprite?)
             material: {
-                let mat_key = MatKey {
-                    image: self.image.clone(),
-                    alpha_mode: HashableAlphaMode(self.alpha_mode),
-                    unlit: self.unlit,
-                    emissive: reduce_colour(self.emissive),
-                };
-
-                if let Some(material) = params.caches.material_cache.get(&mat_key) {
-                    material.clone()
-                } else {
-                    let material = MeshMaterial3d(params.materials.add(material(
+                if self.unique {
+                    MeshMaterial3d(params.materials.add(material(
                         self.image.clone(),
                         self.alpha_mode,
                         self.unlit,
                         self.emissive,
-                    )));
-                    params
-                        .caches
-                        .material_cache
-                        .insert(mat_key, material.clone());
-                    material
+                        self.base_color,
+                    )))
+                } else {
+                    let mat_key = MatKey {
+                        image: self.image.clone(),
+                        alpha_mode: HashableAlphaMode(self.alpha_mode),
+                        unlit: self.unlit,
+                        emissive: reduce_colour(self.emissive),
+                    };
+
+                    if let Some(material) = params.caches.material_cache.get(&mat_key) {
+                        material.clone()
+                    } else {
+                        let material = MeshMaterial3d(params.materials.add(material(
+                            self.image.clone(),
+                            self.alpha_mode,
+                            self.unlit,
+                            self.emissive,
+                            self.base_color,
+                        )));
+                        params
+                            .caches
+                            .material_cache
+                            .insert(mat_key, material.clone());
+                        material
+                    }
                 }
             },
         }
@@ -430,26 +452,37 @@ impl Sprite3dBuilder {
                 .unwrap()
                 .clone(),
             material: {
-                let mat_key = MatKey {
-                    image: self.image.clone(),
-                    alpha_mode: HashableAlphaMode(self.alpha_mode),
-                    unlit: self.unlit,
-                    emissive: reduce_colour(self.emissive),
-                };
-                if let Some(material) = params.caches.material_cache.get(&mat_key) {
-                    material.clone()
-                } else {
-                    let material = MeshMaterial3d(params.materials.add(material(
+                if self.unique {
+                    MeshMaterial3d(params.materials.add(material(
                         self.image.clone(),
                         self.alpha_mode,
                         self.unlit,
                         self.emissive,
-                    )));
-                    params
-                        .caches
-                        .material_cache
-                        .insert(mat_key, material.clone());
-                    material
+                        self.base_color,
+                    )))
+                } else {
+                    let mat_key = MatKey {
+                        image: self.image.clone(),
+                        alpha_mode: HashableAlphaMode(self.alpha_mode),
+                        unlit: self.unlit,
+                        emissive: reduce_colour(self.emissive),
+                    };
+                    if let Some(material) = params.caches.material_cache.get(&mat_key) {
+                        material.clone()
+                    } else {
+                        let material = MeshMaterial3d(params.materials.add(material(
+                            self.image.clone(),
+                            self.alpha_mode,
+                            self.unlit,
+                            self.emissive,
+                            self.base_color,
+                        )));
+                        params
+                            .caches
+                            .material_cache
+                            .insert(mat_key, material.clone());
+                        material
+                    }
                 }
             },
             sprite_3d: Sprite3d {
